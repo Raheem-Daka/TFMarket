@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from 'axios';
 
 const initialState = {
   isAuthenticated: false,
@@ -6,7 +7,28 @@ const initialState = {
   user: null,
 };
 
-const authSlice = createSlice({
+
+// Corrected the name of the action and fixed axios call
+export const signupUser = createAsyncThunk(
+  '/auth/signup',  // action name should reflect the action being performed
+  async (FormData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/api/auth/signup',  // Ensure correct endpoint for signup
+        FormData,
+        {
+          withCredentials: true,  // Send cookies with the request
+        }
+      );
+      return response.data; // Return the response data on success
+    } catch (error) {
+      // Handle error response
+      return rejectWithValue(error.response.data || 'Something went wrong!');
+    }
+  }
+);
+
+export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
@@ -19,15 +41,31 @@ const authSlice = createSlice({
     },
     
     // Action to clear the user (log out)
-    logout: (state) => {
-      state.user = null;
-      state.isAuthenticated = false;
-    },
+    //logout: (state) => {
+      //state.user = null;
+      //state.isAuthenticated = false;
+    //},
     
     // Action to set loading state (optional)
-    setLoading: (state, action) => {
-      state.isLoading = action.payload;
-    },
+    //setLoading: (state, action) => {
+    //  state.isLoading = action.payload;
+    //},
+
+    extraReducers: (builder)=> {
+        builder.addCase(signupUser.pending, (state)=>{
+            state.isLoading = true
+        })
+        .addCase(signupUser.fulfilled, (state, action)=> {
+            state.isLoading = false;
+            state.user = null;
+            state.isAuthenticated = false
+        })
+        .addCase(signupUser.rejected, (state, action) => {
+            state.isLoading = false;
+            state.user = null;
+            state.isAuthenticated = false
+        })
+    }
   },
 });
 
