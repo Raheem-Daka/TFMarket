@@ -32,7 +32,8 @@ function Signup() {
       toast({
         title: 'Signup failed', 
         description: data.payload.message,
-        variant: 'destructive'
+        variant: 'destructive',
+        className: 'bg-red-500 text-white rounded'
       });
     }
     })

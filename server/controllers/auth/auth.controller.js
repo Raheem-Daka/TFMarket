@@ -18,7 +18,7 @@ export const Signup = async (req, res) => {
         if (existingUser) {
             return res.status(409).json({
                 success: false,
-                message: 'User already exists',
+                message: 'Email already exists, Please use a different email',
             });
         }
 
@@ -47,4 +47,51 @@ export const Signup = async (req, res) => {
     }
 };
 
-export const Signin = async (req, res) => {}
+export const Signin = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const existingUser = await User.findOne({ email });
+        if(existingUser){
+            return res.status(409).json({
+                message: "User does not exist, Please register.",
+                success: false
+            })
+        };
+
+        const existPassword = await bcrypt.compare(password, existingUser.password);
+        if (!existPassword) return res.jsno({
+            success: false,
+            message: "Incorrect password, Please try again."
+        });
+        const token = jwt.sign({
+            id: existingUser._id,
+            role: existingUser.role,
+            email: existingUser.email
+        }, "SECRET_KEY", { expiresIn: "60m"})
+
+        res.cookie(
+            'token',
+            token,
+            {
+                httpOnly: true,
+                secure: false
+            }
+        ).json({
+            success: false,
+            message: "Successfully signed in",
+            user: {
+                email: existingUser.email,
+                role: existingUser.role,
+                id: existingUser._id
+            }
+        });
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Error occured during signin"
+        })
+    }
+}

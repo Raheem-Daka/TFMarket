@@ -2,6 +2,8 @@ import CommonForm from '@/components/common/CommonForm';
 import { SigninFormControls } from '@/config';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { signinUser } from '@/store/authSlice';
 
 const initialState ={
   email: '',
@@ -10,8 +12,14 @@ const initialState ={
 function Signin() {
 
   const [formData, setFormData ] = useState(initialState);
+  const dispatch = useDispatch();
 
-  const onSubmit = () => {
+  const onSubmit = (event) => {
+    event.preventDefault();
+
+    dispatch(signinUser(formData)).then((data) => {
+      console.log(data);
+    });
 
   }
   return (
