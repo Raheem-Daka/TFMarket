@@ -26,6 +26,7 @@ function Signup() {
       if(data?.payload?.success) {
         toast({
           title: data?.payload?.message,
+          className: 'bg-green-500 text-white rounded'
         })
       navigate('/auth/signin') 
     } else {

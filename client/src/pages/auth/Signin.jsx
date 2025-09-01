@@ -4,24 +4,37 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { signinUser } from '@/store/authSlice';
+import { useToast } from '@/hooks/use-toast';
 
 const initialState ={
   email: '',
   password: ''
-}
-function Signin() {
+};
 
-  const [formData, setFormData ] = useState(initialState);
+const Signin = () => {
+  const [formData, setFormData] = useState(initialState);  
   const dispatch = useDispatch();
+  const { toast } = useToast();
 
-  const onSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit =  (e) => {
+    e.preventDefault();
 
     dispatch(signinUser(formData)).then((data) => {
-      console.log(data);
-    });
-
-  }
+      if(data?.payload?.success) {
+        toast({
+          title: data?.payload?.message,
+          className: "bg-green-500 text-white rounded"
+        })
+      } else {
+        toast ({
+          title: data?.payload?.message,
+          variant: "destructive",
+          className: 'bg-red-500 text-white rounded'
+        })
+      }
+    })
+  };  
+  
   return (
     <div className=' mx-auto w-full max-w-md space-y-6'>
       <div className='text-center'>

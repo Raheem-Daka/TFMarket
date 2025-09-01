@@ -16,56 +16,75 @@ import ShopHome from './pages/shop/ShopHome';
 import ShopAccount from './pages/shop/ShopAccount';
 import CheckAuth from './components/common/CheckAuth';
 import UnauthPage from './pages/unauthPage/UnauthPage';
+import { useDispatch, useSelector } from 'react-redux';
+import { checkAuth } from './store/authSlice';
+import { useEffect } from 'react';
 
 function App() {
+  const { isAuthenticated, user } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
 
-  const isAuthenticated = false;
-  const user = null;
+  console.log('isAuthenticated:', isAuthenticated);
+  console.log('user:', user);
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
 
   return (
-    <Routes>
-      {/* Root Route */}
-      <Route path="/" element={<Home />} />
-      
-      {/* Authentication Routes */}
-      <Route path="/auth" element={
-        <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-          <AuthLayout />
-        </CheckAuth>      
-      }>
-        <Route path="signin" element={<Signin />} />
-        <Route path="signup" element={<Signup />} />
-      </Route>
-      
-      {/* Admin Routes */}
-      <Route path="/admin" element={
-        <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-          <AdminLayout />
-        </CheckAuth>
-      }>
-        <Route path="admindashboard" element={<AdminDashboard />} />
-        <Route path="adminfeatures" element={<AdminFeatures />} />
-        <Route path="adminorders" element={<AdminOrders />} />
-        <Route path="adminproducts" element={<AdminProducts />} />
-      </Route>
+    <div>
 
-       {/* Shop Routes */}
-      <Route path="/shop" element={
-        <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-          <ShoppingLayout />
-        </CheckAuth>
-      }>
-        <Route path="shopaccount" element={<ShopAccount />} />
-        <Route path="shophome" element={<ShopHome />} />
-        <Route path="shoplisting" element={<ShopListing />} />
-        <Route path="shopcheckout" element={<ShopCheckOut />} />
-      </Route>
+      <Routes>
+        {/* Root Route */}
+        <Route
+          path="/"
+          element={
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+            ></CheckAuth>
+          }
+        /> 
 
-      {/* 404 - Not Found */}
-      <Route path="/unauthpage" element={<UnauthPage />}/>
-      <Route path="*" element={<NotFound />}/>
-     
-    </Routes>
+        {/* Authentication Routes */}
+        <Route path="/auth" element={
+          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <AuthLayout />
+          </CheckAuth>
+        }>
+          <Route path="signin" element={<Signin />} />
+          <Route path="signup" element={<Signup />} />
+        </Route>
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={
+          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <AdminLayout />
+          </CheckAuth>
+        }>
+          <Route path="admindashboard" element={<AdminDashboard />} />
+          <Route path="adminfeatures" element={<AdminFeatures />} />
+          <Route path="adminorders" element={<AdminOrders />} />
+          <Route path="adminproducts" element={<AdminProducts />} />
+        </Route>
+
+        {/* Shop Routes */}
+        <Route path="/shop" element={
+          <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <ShoppingLayout />
+          </CheckAuth>
+        }>
+          <Route path="shopaccount" element={<ShopAccount />} />
+          <Route path="shophome" element={<ShopHome />} />
+          <Route path="shoplisting" element={<ShopListing />} />
+          <Route path="shopcheckout" element={<ShopCheckOut />} />
+        </Route>
+
+        {/* 404 - Not Found */}
+        <Route path="/unauthpage" element={<UnauthPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
   );
 }
 
