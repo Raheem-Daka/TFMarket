@@ -8,7 +8,7 @@ import {
   Select, 
   SelectGroup,
   SelectLabel
-} from '@radix-ui/react-select'; // Import Select from Radix UI
+} from '../ui/select'; // Import Select from Radix UI
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 
@@ -71,7 +71,7 @@ export default function CommonForm({
                   <SelectItem
                     key={optionItem.id}
                     value={optionItem.id}
-                    className="cursor-pointer px-3 py-1.5 hover:bg-gray-100 focus:bg-gray-200"
+                    className="cursor-pointer w-full bg-white px-3 py-1.5 hover:bg-gray-100 focus:bg-gray-200"
                   >
                     {optionItem.label}
                   </SelectItem>
