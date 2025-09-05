@@ -19,9 +19,11 @@ import UnauthPage from './pages/unauthPage/UnauthPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkAuth } from './store/authSlice';
 import { useEffect } from 'react';
+import { Skeleton } from './components/ui/skeleton'
+
 
 function App() {
-  const { isAuthenticated, user } = useSelector(state => state.auth);
+  const { isAuthenticated, user, isLoading } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
   console.log('isAuthenticated:', isAuthenticated);
@@ -31,8 +33,10 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
+  if(isLoading) return <Skeleton className="w-[800px] bg-black h-[800px]" />
+
   return (
-    <div>
+    <>
 
       <Routes>
         {/* Root Route */}
@@ -84,7 +88,7 @@ function App() {
         <Route path="/unauthpage" element={<UnauthPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </div>
+    </>
   );
 }
 

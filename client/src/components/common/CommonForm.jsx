@@ -5,7 +5,10 @@ import {
   SelectItem, 
   SelectTrigger, 
   SelectValue, 
-  Select } from '@radix-ui/react-select'; // Import Select from Radix UI
+  Select, 
+  SelectGroup,
+  SelectLabel
+} from '@radix-ui/react-select'; // Import Select from Radix UI
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 
@@ -27,6 +30,7 @@ export default function CommonForm({
       case 'input':
         element = (
           <input 
+            key={getControlItem.name} // Key for dynamic rendering
             name={getControlItem.name}
             className='rounded border p-1'
             placeholder={getControlItem.placeholder}
@@ -44,52 +48,62 @@ export default function CommonForm({
 
       case 'select':
         element = (
-          <Select value={value} onValueChange={(newValue) => setFormData({
-            ...formData,
-            [getControlItem.name]: newValue
-          })}>
+          <Select
+            value={value}
+            onValueChange={(newValue) =>
+              setFormData({
+                ...formData,
+                [getControlItem.name]: newValue,
+              })
+            }
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder={getControlItem.placeholder} />
             </SelectTrigger>
             <SelectContent>
-              {
-                getControlItem.options && getControlItem.options.length > 0 ?
-                getControlItem.options.map(optionItem => (
-                  <SelectItem 
-                  key={optionItem.id || index } 
-                  value={optionItem.id}
-                  className='cursor-pointer px-3 py-1.5 hover:bg-gray-100 focus:bg-gray-200'
+              <SelectGroup>
+                {/* ✅ Only render SelectLabel if provided */}
+                {getControlItem.labelInsideSelect && (
+                  <SelectLabel>{getControlItem.labelInsideSelect}</SelectLabel>
+                )}
+      
+                {getControlItem.options?.map((optionItem) => (
+                  <SelectItem
+                    key={optionItem.id}
+                    value={optionItem.id}
+                    className="cursor-pointer px-3 py-1.5 hover:bg-gray-100 focus:bg-gray-200"
                   >
                     {optionItem.label}
                   </SelectItem>
-                )) : null
-              }
+                ))}
+              </SelectGroup>
             </SelectContent>
           </Select>
         );
         break;
-
+        
       case 'textarea':
         element = (
           <Textarea 
+            key={getControlItem.name} // Key for dynamic rendering
             name={getControlItem.name}
             placeholder={getControlItem.placeholder}
             id={getControlItem.id || getControlItem.name}
             value={value}
             onChange={(e) => 
               setFormData({
-              ...formData,
-              [getControlItem.name]: e.target.value,
-            })
-          }
+                ...formData,
+                [getControlItem.name]: e.target.value,
+              })
+            }
           />
         );
         break;
 
       default:
-        case 'input':
         element = (
           <input 
+            key={getControlItem.name} // Key for dynamic rendering
             className="border rounded p-1"
             name={getControlItem.name}
             placeholder={getControlItem.placeholder}
@@ -98,10 +112,10 @@ export default function CommonForm({
             value={value}
             onChange={(e) => 
               setFormData({
-              ...formData,
-              [getControlItem.name]: e.target.value,
-            })
-          }
+                ...formData,
+                [getControlItem.name]: e.target.value,
+              })
+            }
           />
         );
         break;
@@ -111,12 +125,15 @@ export default function CommonForm({
 
   return (
     <>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={(e) => {
+        e.preventDefault(); // Prevent default form submission
+        onSubmit(e);         // Call the onSubmit handler
+      }}>
         <div className="flex flex-col gap-3">
           {
             formControls.map((controlItem) => (
               <div className="grid w-full gap-1.5" key={controlItem.name}>
-                <Label className="mb-1">{controlItem.label}</Label>
+                <Label className="mb-1" htmlFor={controlItem.name}>{controlItem.label}</Label>
                 {renderInputByComponentType(controlItem)}
               </div>
             ))

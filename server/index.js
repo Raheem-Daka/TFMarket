@@ -5,40 +5,42 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import authRouter from './routes/auth/auth.routes.js';
 
-
-dotenv.config()
+dotenv.config();
 const app = express();
 
+// CORS configuration
 app.use(cors({
-    origin : "http://localhost:5173",
-    methods : [
-        'GET',
-        'POST',
-        'DELETE',
-        'PUT'],
-    allowedHeaders : [
+    origin: "http://localhost:5173",
+    methods: ['GET', 'POST', 'DELETE', 'PUT'],
+    allowedHeaders: [
         'Content-Type',
         'Authorization',
         'Cache-Control',
         'Expires',
-        'Pragma'
+        'Pragma',
+        'ExpiresIn',
     ],
-    credentials : true
+    credentials: true,
 }));
 
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use('/api/auth', authRouter)
 
-mongoose.connect(process.env.mongoose)
-.then(() => {
+// Routes
+app.use('/api/auth', authRouter);
+
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
     console.log("✅ DB connected");
-})
-.catch((error) => {
+  })
+  .catch((error) => {
     console.log("❌ MongoDB connection error: ", error);
-});
+  });
 
+// Server
 const PORT = process.env.PORT || 8000;
-
-
-app.listen(PORT, () => console.log(`Server is running on ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
