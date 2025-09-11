@@ -141,7 +141,7 @@ export default function CommonForm({
         </div>
         <Button 
           type="submit" 
-          className="rounded p-2 text-sm mt-2 w-full bg-gray-300 hover:opacity-80"
+          className="rounded p-2 text-sm mt-2 w-full bg-blue-300 hover:opacity-80"
         >
           {buttonText || 'Submit'}
         </Button>

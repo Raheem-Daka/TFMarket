@@ -31,9 +31,12 @@ const SideBarMenuItems = ({ open, setOpen }) => {
   return (
     <Fragment>
       {/* Sidebar for small screens */}
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="left" className="w-64 bg-white">
-          <div className="flex flex-col h-full">
+      <Sheet 
+      open={open} 
+      onOpenChange={setOpen}
+      >
+        <SheetContent side="left" className="w-64 bg-white w-64 border-l">
+          <div className="flex flex-col h-full ">
             <SheetHeader className="border-b">
               <SheetTitle>Admin Panel</SheetTitle>
             </SheetHeader>
@@ -45,7 +48,7 @@ const SideBarMenuItems = ({ open, setOpen }) => {
       </Sheet>
 
       {/* Sidebar for large screens (visible on lg and up) */}
-      <nav className="hidden lg:block my-8 flex flex-col gap-2">
+      <nav className="w-64 hidden  p-2 bg-blue-50 lg:block flex flex-col gap-2">
         {renderMenuItems()}
       </nav>
     </Fragment>

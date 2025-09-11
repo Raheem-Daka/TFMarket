@@ -1,0 +1,87 @@
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios"
+
+const  initialState ={
+    isLoading: false,
+    productList: [
+
+    ]
+}
+
+export const addNewProduct = createAsyncThunk(
+    "/adminproducts/addNewProduct", 
+    async (formData) => {
+        const result = await axios.post("http://localhost:8000/api/admin/adminproducts/add",
+            formData,
+            {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }
+        )
+
+        return result?.data;
+    })
+    
+export const fetchAllProducts = createAsyncThunk(
+    "/products/fetchAllProducts", 
+    async () => {
+        const result = await axios.get("http://localhost:8000/api/admin/adminproducts/get",
+        )
+
+        return result?.data;
+    })
+    
+
+export const editProduct = createAsyncThunk(
+    "/products/editProduct", 
+    async ({id, formData}) => {
+        const result = await axios.put(`http://localhost:8000/api/admin/adminproducts/edit/${id}`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }
+        )
+
+        return result?.data;
+    })
+        
+export const deleteProduct = createAsyncThunk(
+    "/products/deleteProduct", 
+    async (id) => {
+        const result = await axios.delete(`http://localhost:8000/api/admin/adminproducts/delet/${id}`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }
+        )
+
+        return result?.data;
+    })
+        
+            
+const AdminProductsSlice = createSlice({
+    name: "adminProducts",
+    initialState,
+    reducers: {},
+    extraReducers: (builder) => {
+        builder.addCase(fetchAllProducts.pending, (state)=>{
+            state.isLoading = true
+        }).addCase(fetchAllProducts.fulfilled, (state,action)=>{
+            console.log(action.payload.data);
+
+            state.isLoading = false
+            state.productList = action.payload
+        }).addCase(fetchAllProducts.rejected, (state,action)=>{
+
+            state.isLoading = false
+            state.productList = []
+        })
+    }
+})
+
+export default AdminProductsSlice.reducer

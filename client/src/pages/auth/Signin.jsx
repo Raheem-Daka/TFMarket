@@ -16,10 +16,19 @@ const Signin = () => {
   const dispatch = useDispatch();
   const { toast } = useToast();
 
-  const onSubmit =  (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
 
-    dispatch(signinUser(formData)).then((data) => {
+    if (!formData.email || !formData.password) {
+      toast({
+        title: "Email and password are required",
+        variant: "destructive",
+        className: "bg-red-500 text-white rounded"
+      });
+      return;
+    }    
+
+    await dispatch(signinUser(formData)).then((data) => {
       if(data?.payload?.success) {
         toast({
           title: data?.payload?.message,

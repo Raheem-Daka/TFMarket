@@ -9,7 +9,7 @@ const AdminHeader = ({ setOpen }) => {
   };
 
   return (
-    <header className="flex items-center justify-between px-4 py-2">
+    <header className="w-full flex items-center bg-blue-50 justify-between p-2">
       {/* Mobile Toggle Button */}
       <Button 
         onClick={() => setOpen(true)} 
