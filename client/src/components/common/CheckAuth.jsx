@@ -34,9 +34,9 @@ function CheckAuth({ isAuthenticated, user, children }) {
   }
 
   // If admin is trying to access shop pages, redirect to admin dashboard
-  if (isAuthenticated && user?.role === "admin" && location.pathname.includes("/shop")) {
-    return <Navigate to="/admin/admindashboard" />;
-  }
+  //if (isAuthenticated && user?.role === "admin" && location.pathname.includes("/shop")) {
+    //return <Navigate to="/admin/admindashboard" />;
+  //}
 
   // If none of the above conditions match, render the children (i.e., allow access)
   return <>{children}</>;

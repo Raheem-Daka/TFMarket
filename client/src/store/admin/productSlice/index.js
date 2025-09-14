@@ -3,15 +3,14 @@ import axios from "axios"
 
 const  initialState ={
     isLoading: false,
-    productList: [
-
-    ]
+    productList: [],
 }
 
 export const addNewProduct = createAsyncThunk(
     "/adminproducts/addNewProduct", 
     async (formData) => {
-        const result = await axios.post("http://localhost:8000/api/admin/adminproducts/add",
+        const result = await axios.post(
+            "http://localhost:8000/api/admin/adminproducts/add",
             formData,
             {
                 headers: {
@@ -21,22 +20,26 @@ export const addNewProduct = createAsyncThunk(
         )
 
         return result?.data;
-    })
+    }
+)
     
 export const fetchAllProducts = createAsyncThunk(
     "/products/fetchAllProducts", 
     async () => {
-        const result = await axios.get("http://localhost:8000/api/admin/adminproducts/get",
+        const result = await axios.get(
+            "http://localhost:8000/api/admin/adminproducts/get",
         )
 
         return result?.data;
-    })
+    }
+)
     
 
 export const editProduct = createAsyncThunk(
     "/products/editProduct", 
     async ({id, formData}) => {
-        const result = await axios.put(`http://localhost:8000/api/admin/adminproducts/edit/${id}`,
+        const result = await axios.put(
+            `http://localhost:8000/api/admin/adminproducts/edit/${id}`,
             formData,
             {
                 headers: {
@@ -46,13 +49,14 @@ export const editProduct = createAsyncThunk(
         )
 
         return result?.data;
-    })
+    }
+)
         
 export const deleteProduct = createAsyncThunk(
     "/products/deleteProduct", 
     async (id) => {
-        const result = await axios.delete(`http://localhost:8000/api/admin/adminproducts/delet/${id}`,
-            formData,
+        const result = await axios.delete(
+            `http://localhost:8000/api/admin/adminproducts/delete/${id}`,
             {
                 headers: {
                     "Content-Type": "application/json"
@@ -61,7 +65,8 @@ export const deleteProduct = createAsyncThunk(
         )
 
         return result?.data;
-    })
+    }
+)
         
             
 const AdminProductsSlice = createSlice({
@@ -69,18 +74,19 @@ const AdminProductsSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(fetchAllProducts.pending, (state)=>{
-            state.isLoading = true
-        }).addCase(fetchAllProducts.fulfilled, (state,action)=>{
-            console.log(action.payload.data);
-
-            state.isLoading = false
-            state.productList = action.payload
-        }).addCase(fetchAllProducts.rejected, (state,action)=>{
-
-            state.isLoading = false
-            state.productList = []
+        builder
+        .addCase(fetchAllProducts.pending, (state) => {
+            state.isLoading = true;
         })
+        .addCase(fetchAllProducts.fulfilled, (state, action) => {
+            console.log("Fetched products:", action.payload.data);
+            state.isLoading = false;
+            state.productList = action.payload.data;
+        })
+        .addCase(fetchAllProducts.rejected, (state, action) => {
+            state.isLoading = false;
+            state.productList = [];
+        });
     }
 })
 

@@ -46,6 +46,25 @@ export const signinUser = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk(
+  '/auth/logout',  // action name should reflect the action being performed
+  async (FormData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/api/auth/logout',
+        {}, // Ensure correct endpoint for signin
+        {
+          withCredentials: true,  // Send cookies with the request
+        }
+      );
+      return response.data; // Return the response data on success
+    } catch (error) {
+      // Handle error response
+      return rejectWithValue(error.response.data || 'Something went wrong!');
+    }
+  }
+);
+
 export const checkAuth = createAsyncThunk(
   '/auth/checkAuth',  // action name should reflect the action being performed
   async () => {
@@ -139,7 +158,18 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
+      }).addCase(logoutUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        if (action.payload.success) {
+          state.user = null;               // Clear user on logout success
+          state.isAuthenticated = false;
+        } else {
+          // Optional: handle failure however you want
+          state.user = null;
+          state.isAuthenticated = false;
+        }
       });
+      ;
   },
 });
 

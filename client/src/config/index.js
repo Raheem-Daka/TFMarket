@@ -1,4 +1,4 @@
-import { BadgeCheck, LayoutDashboard, ShoppingBasket } from "lucide-react";
+import { BadgeCheck, LayoutDashboard, Dumbbell,Home, ShoppingBasket, Shirt } from "lucide-react";
 
 // Signup Form Controls
 export const SignupFormControls = [
@@ -113,3 +113,41 @@ export const addProductFormElements = [
   },
 ];
 
+const sharedCategoryOptions = [
+  { id: "hoodies", label: "Hoodies" },
+  { id: "t-shirts", label: "T-shirts", icon: Shirt },
+  { id: "shorts", label: "Shorts" },
+  { id: "sweatPants", label: "Sweat Pants" },
+];
+
+export const shoppingHeaderMenuItems = [
+  {
+    id: "home",
+    label: "Home",
+    path: "/shop/shophome",
+    icon: Home
+  },
+  {
+    id: "shirts",
+    label: "Shirts",
+    path: "/shop/listing",
+    icon: Shirt
+  },
+  {
+    id: "shorts",
+    label: "Shorts",
+    path: "/shop/listing",
+  },
+  {
+    id: "hoodies",
+    label: "Hoodies",
+    path: "/shop/listing",
+    icon: Dumbbell
+  },
+  {
+    id: "accessories",
+    label: "Accessories",
+    path: "/shop/listing",
+    icon: Dumbbell
+  },
+];

@@ -18,7 +18,6 @@ export default function CommonForm({
   setFormData, 
   onSubmit, 
   buttonText,
-  className = ''
  }) {
 
   function renderInputByComponentType(getControlItem) {

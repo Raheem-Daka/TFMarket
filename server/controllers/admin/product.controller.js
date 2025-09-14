@@ -82,6 +82,7 @@ export const fetchAllProducts =  async (req,res) => {
     })
   }
 }
+
 // edit product
 export const editProduct =  async (req,res) => {
   try{
@@ -96,7 +97,7 @@ export const editProduct =  async (req,res) => {
       totalStock
     } = req.body;
 
-    const findProduct = await Product.findById(id);
+    let findProduct = await Product.findById(id);
     if(!findProduct)
       return res.status(404).json({
     success: false,
@@ -106,10 +107,17 @@ export const editProduct =  async (req,res) => {
   findProduct.title = title || findProduct.title
   findProduct.description =description || findProduct.description
   findProduct.category = category || findProduct.category
-  findProduct.price = price || findProduct.price
-  findProduct.salePrice = salePrice || findProduct.salePrice
-  findProduct.totalStock = totalStock || findProduct.totalStock
-
+  if (price !== undefined) {
+    findProduct.price = price === "" ? 0 : price;
+  }
+  
+  if (salePrice !== undefined) {
+    findProduct.salePrice = salePrice === "" ? 0 : salePrice;
+  }
+  
+  if (totalStock !== undefined) {
+    findProduct.totalStock = totalStock === "" ? 0 : totalStock;
+  }
   await findProduct.save();
   res.status(200).json({
     success: true,
@@ -124,27 +132,33 @@ export const editProduct =  async (req,res) => {
     })
   }
 }
-// delete product
-export const deleteProduct =  async (req,res) => {
-  try{
-    const {id} = req.body;
-    const product = await Product.findById(id);
 
-  if(!product) 
-    return res.status(404).json({
-  success:false,
-  message: "Product not found"
-});
-res.status(200).json({
-  success: true,
-  message: "Product deleted successfully"
-})
-  }catch(error){
-    console.log(error)
+// delete product
+export const deleteProduct = async (req, res) => {
+  try {
+    const id  = req.params.id; // Usually, IDs are passed via params or URL, but body is fine too
+
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    // Delete the product
+    await Product.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
     res.status(500).json({
       success: false,
-      message: "Error occured"
-    })
+      message: "Error occurred",
+    });
   }
-}
+};
 

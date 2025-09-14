@@ -1,11 +1,25 @@
 import { AlignJustify, LogOut } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../store/authSlice/index";
 
 const AdminHeader = ({ setOpen }) => {
-  const handleLogout = () => {
-    // Handle logout logic here
-    console.log('User logged out');
-    // You can redirect the user to a login page or reset the session.
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const resultAction = await dispatch(logoutUser());
+
+      if (logoutUser.fulfilled.match(resultAction)) {
+        navigate("/auth/signin");  // redirect to signin page
+      } else {
+        console.error("Logout failed:", resultAction.payload || resultAction.error);
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   return (
